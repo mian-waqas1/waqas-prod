@@ -1,0 +1,81 @@
+---
+ - name: multi task
+   hosts: all
+   vars:
+    users:
+     - aa
+     - bb
+     - cc
+    packages:
+     - httpd
+     - firewalld
+   tasks:
+    - name: adding user
+      user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ users }}"
+      notify: copy motd
+
+    - name: installing pkgs
+      yum:
+        name: "{{ item }}"
+        state: installed
+      with_items: "{{ packages }}"
+      notify:
+       - start httpd
+       - enable firewalld
+       - disable selinux
+     
+    - name: create file
+      file:
+        path: /tmp/hello_world
+        state: touch
+      when: ansible_host == 'waqas-vm1-linoop.us'
+
+    - name: copy file
+      copy:
+        src: /tmp/hello_world
+        dest: /tmp/ "{{ item }}"
+      loop: "{{ users }}" 
+
+    - name: line in file
+      lineinfile:
+        path: /etc/hosts
+        line: hashir hadi 
+   handlers: 
+    - name: copy motd
+      copy:
+        src: /etc/motd
+        dest: /etc/motd
+
+    - name: start httpd
+      systemd:
+        name: httpd
+        state: started
+        enbled: yes
+     
+    - name: enable firewalld
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+     
+    - name: disable selinux
+      selinux:
+        policy: targeted
+        state: premissive
+
+
+
+
+
+
+
+
+
+
+
+
+
