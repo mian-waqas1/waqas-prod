@@ -13,8 +13,7 @@
     - name: adding user
       user:
         name: "{{ item }}"
-        state: absent
-        remove: yes
+        state: present
       loop: "{{ users }}"
       notify: copy motd
 
@@ -33,6 +32,15 @@
       lineinfile:
         path: /etc/hosts
         line: hashir hadi
+
+    - name: remove all user
+      user: 
+        name: "{{ item }}"
+        state: absent
+        remove: yes
+      loop: "{{ users ]}"
+
+
    handlers:
     - name: copy motd
       copy:
@@ -55,6 +63,4 @@
     - name: disable selinux
       selinux:
         policy: targeted
-        state: premissive
-
-
+        state: premissive 
