@@ -38,7 +38,7 @@
         name: "{{ item }}"
         state: absent
         remove: yes
-      loop: "{{ users ]}"
+      loop: "{{ users }}"
 
 
    handlers:
