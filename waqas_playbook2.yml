@@ -13,7 +13,8 @@
     - name: adding user
       user:
         name: "{{ item }}"
-        state: present
+        state: absent
+        remove: yes
       loop: "{{ users }}"
       notify: copy motd
 
