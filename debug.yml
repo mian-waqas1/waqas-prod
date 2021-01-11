@@ -1,0 +1,32 @@
+---
+ - name: multiplay playbook
+   hosts: all
+   vars:
+    user_name: haji
+    pkg_name: chrony
+    svc_name: chronyd
+
+   tasks: 
+    - name: creating user
+      user: 
+        name: "{{ user_name }}"
+        state: present
+    - debug:
+        msg: "user {{ user_name }} has created"
+
+    - name: installing cornyd
+      yum:
+        name: "{{ pkg_name }}"
+        state: present
+
+    - debug:
+        msg: "pkg {{ pkg_name }} pkg installed" 
+
+    - name: starting chorny service
+      service:
+        name: "{{ svc_name }}"
+        state: started
+
+    - debug:
+        msg: "svc {{ svc_name }} service started"
+
